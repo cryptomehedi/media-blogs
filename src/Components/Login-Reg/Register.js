@@ -5,7 +5,7 @@ import auth from '../../firebase.init';
 const Register = () => {
 
     const [ createUserWithEmailAndPassword, user,  loading, error, ] = useCreateUserWithEmailAndPassword(auth, {sendEmailVerification : true});
-    const [updateProfile, updating, error3] = useUpdateProfile(auth);
+    const [updateProfile, updating] = useUpdateProfile(auth);
     const [error1, setError1] = useState('')
     const [error2, setError2] = useState('')
     const userPassword = useRef('');
@@ -20,8 +20,8 @@ const Register = () => {
             if(password === confirmPassword){
                 console.log(displayName, email, password, confirmPassword);
                 await createUserWithEmailAndPassword (email, password)
-                await updateProfile(displayName)
-                alert(`welcome ${displayName}`)
+                await updateProfile({displayName}) 
+                console.log("object");
             }else{
                 setError1('')
                 setError2('Password did not matched')
@@ -33,9 +33,11 @@ const Register = () => {
         setError1('')
         setError2('')
     }
-    if(user)(
+    if(user){
+        console.log(user);
         alert('hey bro')
-    )
+    }
+
 
     return (
         <section className="text-gray-600 body-font">
@@ -47,25 +49,28 @@ const Register = () => {
                 <form onSubmit={handleSubmit} className="lg:w-2/6 md:w-1/2 bg-gray-100 rounded-lg p-8 flex flex-col md:ml-auto w-full mt-10 md:mt-0">
                     <h2 className="text-gray-900 text-lg font-medium title-font mb-5">Sign Up</h2>
                     <div className="relative mb-4">
-                        <label for="name" className="leading-7 text-sm text-gray-600">Name</label>
+                        <label htmlFor="name" className="leading-7 text-sm text-gray-600">Name</label>
                         <input type="name" id="name" name="name" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                     </div>
                     <div className="relative mb-4">
-                        <label for="email" className="leading-7 text-sm text-gray-600">Email</label>
+                        <label htmlFor="email" className="leading-7 text-sm text-gray-600">Email</label>
                         <input type="email" id="email" name="email" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         
                     </div>
                     <div className="relative mb-4">
-                        <label for="password" className="leading-7 text-sm text-gray-600">Password</label>
+                        <label htmlFor="password" className="leading-7 text-sm text-gray-600">Password</label>
                         <input ref={userPassword} type="password" id="password" name="password" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         <p className="text-xs text-red-400 mt-3">{error1 && error1}</p>
                     </div>
                     <div className="relative mb-4">
-                        <label for="confirmPassword" className="leading-7 text-sm text-gray-600">Password</label>
+                        <label htmlFor="confirmPassword" className="leading-7 text-sm text-gray-600">Password</label>
                         <input type="password" id="confirmPassword" name="confirmPassword" className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out" />
                         <p className="text-xs text-red-400 mt-3">{error2 && error2}</p>
                     </div>
                     <button className="text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">Login</button> 
+                    <p className="text-xs text-red-400 mt-3">{error && error.message.slice(22, error.message.length-2)}</p>
+                    <p className="text-xs text-red-400 mt-3">{loading && <>Please wait...</>}</p>
+                    <p className="text-xs text-red-400 mt-3">{updating && <>Please wait...</>}</p>
                 </form>
             </div>
         </section>
